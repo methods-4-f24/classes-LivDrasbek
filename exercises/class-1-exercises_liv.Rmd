@@ -1,0 +1,335 @@
+---
+title: "Exercises for class 1"
+output: html_document
+date: "13-02-24" 
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+#install.packages(c("coda","mvtnorm","devtools","loo","dagitty","shape"))
+#devtools::install_github("rmcelreath/rethinking")
+```
+
+
+```{r}
+library(rethinking)
+```
+
+
+
+```{r}
+# Install and load the rethinking package
+install.packages("rethinking")
+library(rethinking)
+
+
+```
+
+##Testing wether the R package Rethinking works properly (before the exercises)
+
+```{r}
+# Load a built-in dataset
+data(Howell1)
+
+# Explore the dataset
+head(Howell1)
+
+
+```
+
+```{r}
+fit <- quap(
+  alist(
+    height ~ dnorm(mu, sigma),
+    mu <- a + b * age,
+    a ~ dnorm(178, 20),
+    b ~ dnorm(0, 10),
+    sigma ~ dunif(0, 50)
+  ), data = Howell1
+)
+
+precise(fit)
+
+```
+
+
+```{r}
+# Display model summary
+precis(fit)
+```
+
+ 
+
+# Exercises for Class 1
+
+## Supporting code
+
+Below is code from Chapter 2 of the book that you can use to do the exercises. Not all the code you require is here though. Make sure to not rush it and take time to play around with each function. :))
+
+```{r}
+# Grid Approximation
+
+# define grid
+p_grid = seq(from = 0, to = 1, length.out=20)
+
+# define prior
+prior = rep(1, 20)
+
+# compute likelihood at each value in grid
+likelihood = dbinom(6, size = 9, prob = p_grid)
+
+# compute product of likelihood and prior
+unstd.posterior = likelihood * prior
+
+# standardize the posterior so it sums to 1
+posterior = unstd.posterior / sum(unstd.posterior)
+
+# plot the distribution
+plot(p_grid, posterior, type = "b",
+     xlab = "probability of water", ylab = "posterior_probability")
+mtext("20 points")
+
+```
+
+## Exercises
+
+### Easy
+
+2E1. 
+
+```{r}
+
+# 2
+
+```
+
+2E2.
+
+```{r}
+
+# 3
+
+```
+
+2E3.
+
+```{r}
+
+# 1
+```
+
+2E4.
+
+```{r}
+
+# Discuss in pairs/groups. Ask me for a hint if you feel like it.
+ 
+```
+
+### Medium 
+
+2M1.
+
+```{r}
+
+# (1) W,W W - Grid Approximation
+
+# define grid
+p_grid = seq(from = 0, to = 1, length.out=20)
+
+# define prior
+prior = rep(1, 20)
+ 
+# compute likelihood at each value in grid
+likelihood = dbinom(3, size = 3, prob = p_grid)
+
+# compute product of likelihood and prior
+unstd.posterior = likelihood * prior
+
+# standardize the posterior so it sums to 1
+posterior = unstd.posterior / sum(unstd.posterior)
+
+# plot the distribution
+plot(p_grid, posterior, type = "b",
+     xlab = "probability of water", ylab = "posterior_probability")
+mtext("20 points")
+ 
+```
+
+```{r}
+# (2) W,W, W, L - Grid Approximation
+
+# define grid
+p_grid = seq(from = 0, to = 1, length.out=20)
+
+# define prior
+prior = rep(1, 20)
+ 
+# compute likelihood at each value in grid
+likelihood = dbinom(3, size = 4, prob = p_grid)
+
+# compute product of likelihood and prior
+unstd.posterior = likelihood * prior
+
+# standardize the posterior so it sums to 1
+posterior = unstd.posterior / sum(unstd.posterior)
+
+# plot the distribution
+plot(p_grid, posterior, type = "b",
+     xlab = "probability of water", ylab = "posterior_probability")
+mtext("20 points")
+
+```
+
+
+```{r}
+# (3) L,W,W, L, W, W, W - Grid Approximation
+
+# define grid
+p_grid = seq(from = 0, to = 1, length.out=20)
+
+# define prior
+prior = rep(1, 20)
+ 
+# compute likelihood at each value in grid
+likelihood = dbinom(5, size = 7, prob = p_grid)
+
+# compute product of likelihood and prior
+unstd.posterior = likelihood * prior
+
+# standardize the posterior so it sums to 1
+posterior = unstd.posterior / sum(unstd.posterior)
+
+# plot the distribution
+plot(p_grid, posterior, type = "b",
+     xlab = "probability of water", ylab = "posterior_probability")
+mtext("20 points")
+
+```
+
+2M2.
+
+```{r}
+
+# In the book, McElreath says that we can do much better than choosing a uniform prior for estimating the coverage of water. Is this what we are doing here? How does that impact our estimation?
+
+
+
+# (1) W,W W - Grid Approximation
+
+# define grid
+p_grid = seq(from = 0, to = 1, length.out=20)
+
+# define prior
+prior = ifelse(p_grid>0.5,1,0)
+ 
+# compute likelihood at each value in grid
+likelihood = dbinom(3, size = 3, prob = p_grid)
+
+# compute product of likelihood and prior
+unstd.posterior = likelihood * prior
+
+# standardize the posterior so it sums to 1
+posterior = unstd.posterior / sum(unstd.posterior)
+
+# plot the distribution
+plot(p_grid, posterior, type = "b",
+     xlab = "probability of water", ylab = "posterior_probability")
+mtext("20 points")
+
+
+print(prior)
+print(p_grid)
+```
+
+
+```{r}
+# (2) W,W, W, L - Grid Approximation
+
+# define grid
+p_grid = seq(from = 0, to = 1, length.out=20)
+
+# define prior
+prior = ifelse(p_grid>0.5,1,0)
+
+# compute likelihood at each value in grid
+likelihood = dbinom(3, size = 4, prob = p_grid)
+
+# compute product of likelihood and prior
+unstd.posterior = likelihood * prior
+
+# standardize the posterior so it sums to 1
+posterior = unstd.posterior / sum(unstd.posterior)
+
+# plot the distribution
+plot(p_grid, posterior, type = "b",
+     xlab = "probability of water", ylab = "posterior_probability")
+mtext("20 points")
+```
+
+```{r}
+# (3) L,W,W, L, W, W, W - Grid Approximation
+
+# define grid
+p_grid = seq(from = 0, to = 1, length.out=20)
+
+# define prior 
+prior = ifelse(p_grid>0.5,1,0)
+ 
+# compute likelihood at each value in grid
+likelihood = dbinom(5, size = 7, prob = p_grid)
+
+# compute product of likelihood and prior
+unstd.posterior = likelihood * prior
+
+# standardize the posterior so it sums to 1
+posterior = unstd.posterior / sum(unstd.posterior)
+
+# plot the distribution
+plot(p_grid, posterior, type = "b",
+     xlab = "probability of water", ylab = "posterior_probability")
+mtext("20 points") 
+
+```
+
+2M3.
+
+```{r}
+
+# Use the Bayes formula!
+
+# P(Earth, Land) = 0.15/0.65 = 0.23
+
+
+     
+```
+
+For the exercises below, I highly suggest you to grab a piece of paper and try to solve the problems in a 'visual' way.
+
+2M4.
+
+```{r}
+
+# Write your probability here.
+
+```
+
+2M5.
+
+```{r}
+
+# Write your probability here.
+
+```
+
+2M6.
+
+```{r}
+
+# Write your probability here.
+
+```
